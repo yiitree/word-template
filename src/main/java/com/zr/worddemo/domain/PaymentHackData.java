@@ -8,6 +8,8 @@ import java.util.List;
 public class PaymentHackData {
 
     private String subtotal;
+
+    // 一些通用数据
 //    private String tax;
 //    private String transform;
 //    private String other;
@@ -16,10 +18,8 @@ public class PaymentHackData {
     // 总计
     private String total;
 
+    // 表格内数据
     private List<Goods> goods;
     private List<Labor> labors;
-
-//    private List<Goods> goods2;
-//    private List<Labor> labors2;
 
 }

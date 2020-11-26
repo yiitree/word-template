@@ -6,10 +6,15 @@ import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 import com.zr.worddemo.domain.Goods;
 import com.zr.worddemo.domain.Labor;
 import com.zr.worddemo.domain.PaymentHackData;
+import com.zr.worddemo.util.WordUtils;
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +22,11 @@ import java.util.Random;
 @DisplayName("Example for HackLoop Table")
 public class HackLoopTableRenderPolicyTest {
 
-    String resource = "E:/word/table-template.docx";
+    String inPutDir = "src/main/resources/template/table-template.docx";
+//    String inPutDir = "E:/word/table-template.docx";
+    String outPutDir = "E:/word/table-template-ok.docx";
+    String outPutDir1 = "E:/word/table-template-ok1.docx";
+
     PaymentHackData data = new PaymentHackData();
 
     @BeforeEach
@@ -61,8 +70,17 @@ public class HackLoopTableRenderPolicyTest {
                 .bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy)
                 .build();
-        XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("E:/word/table-template-ok.docx");
+        XWPFTemplate template = XWPFTemplate.compile(inPutDir, config).render(data);
+        template.writeToFile(outPutDir);
+
+        // 在读取一遍，生成目录(其实就是设置域，应该可以实现在模板中设置好)
+        XWPFDocument doc = new XWPFDocument(POIXMLDocument.openPackage(outPutDir));
+        WordUtils.generateToc(doc);
+        OutputStream out = new FileOutputStream(outPutDir1);
+        doc.write(out);
+        out.flush();
+        out.close();
+
     }
 
 }
